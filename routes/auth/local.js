@@ -30,10 +30,10 @@ router.post('/register', (req, res, next) => {
         password: await bcrypt.hash(password, 10),
       });
       await newUser.save();
-      res.send({ status: true, message: 'User created', data: newUser });
+      return res.send({ status: true, message: 'User created', data: newUser });
     }
 
-    if (user) res.send({ status: false, message: 'User already exists' });
+    if (user) return res.send({ status: false, message: 'User already exists' });
   });
 });
 
