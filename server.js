@@ -44,6 +44,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Strategies
+app.use(require('./routes/auth/googleStrategy'));
 require('./routes/auth/localStrategy')();
 
 // Serialize
