@@ -2,6 +2,7 @@ const router = require('express').Router();
 const passport = require('passport');
 const User = require('../../db/models/User');
 const bcrypt = require('bcryptjs');
+
 module.exports = router;
 
 router.get('/me', (req, res, next) => {
@@ -13,8 +14,8 @@ router.post('/login', passport.authenticate('local'), (req, res) => {
   res.json({ status: true });
 });
 
-router.post('/register', (req, res, next) => {
-  const { email, password } = req.body;
+router.post('/register', async (req, res, next) => {
+  const { email, password, role } = req.body;
 
   if (!email || !password || typeof email !== 'string' || typeof password !== 'string') {
     res.send({ status: false, message: 'Improper values' });
@@ -28,6 +29,7 @@ router.post('/register', (req, res, next) => {
       const newUser = new User({
         email,
         password: await bcrypt.hash(password, 10),
+        role,
       });
       await newUser.save();
       return res.send({ status: true, message: 'User created', data: newUser });

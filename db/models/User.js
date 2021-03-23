@@ -21,6 +21,11 @@ const user = new mongoose.Schema({
     token: String,
     name: String,
   },
+  role: {
+    type: String,
+    required: false,
+    default: 'CUSTOMER',
+  },
 });
 
 const User = mongoose.model('User', user);
