@@ -4,7 +4,7 @@ const User = require('../../db/models/User');
 const bcrypt = require('bcryptjs');
 
 module.exports = router;
-
+const y;
 router.get('/me', (req, res, next) => {
   if (req.user) return res.send({ status: true, data: req.user });
   else res.send({ status: false, message: 'No user logged in' });
@@ -17,7 +17,12 @@ router.post('/login', passport.authenticate('local'), (req, res) => {
 router.post('/register', async (req, res, next) => {
   const { email, password, role } = req.body;
 
-  if (!email || !password || typeof email !== 'string' || typeof password !== 'string') {
+  if (
+    !email ||
+    !password ||
+    typeof email !== 'string' ||
+    typeof password !== 'string'
+  ) {
     res.send({ status: false, message: 'Improper values' });
     return;
   }
@@ -35,7 +40,8 @@ router.post('/register', async (req, res, next) => {
       return res.send({ status: true, message: 'User created', data: newUser });
     }
 
-    if (user) return res.send({ status: false, message: 'User already exists' });
+    if (user)
+      return res.send({ status: false, message: 'User already exists' });
   });
 });
 
