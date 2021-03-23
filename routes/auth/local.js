@@ -4,7 +4,7 @@ const User = require('../../db/models/User');
 const bcrypt = require('bcryptjs');
 
 module.exports = router;
-const y;
+
 router.get('/me', (req, res, next) => {
   if (req.user) return res.send({ status: true, data: req.user });
   else res.send({ status: false, message: 'No user logged in' });
