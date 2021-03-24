@@ -1,7 +1,6 @@
 const router = require('express').Router();
-const e = require('express');
 const Listing = require('../../db/models/Listing');
-const { isLoggedIn, isAdmin } = require('../auth/utils');
+const { isLoggedIn } = require('../auth/utils');
 
 module.exports = router;
 
@@ -33,7 +32,7 @@ router.get('/', (req, res) => {
 
 //  @desc        Create new listing
 //  @route       POST /api/listings
-//  @access      Public
+//  @access      Private
 router.post('/', isLoggedIn, (req, res) => {
   const { title, subtitle, price, address, images, ameneties } = req.body;
 
