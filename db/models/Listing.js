@@ -24,6 +24,11 @@ const ListingSchema = new Schema({
     type: Schema.Types.Mixed,
     required: true,
   },
+  archived: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
 });
 
 const Listing = mongoose.model('Listing', ListingSchema);
