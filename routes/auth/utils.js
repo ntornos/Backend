@@ -7,4 +7,9 @@ const isAdmin = (req, res, next) => {
   return res.send({ status: false, message: 'User is not an admin' });
 };
 
-module.exports = { isAdmin };
+const isLoggedIn = (req, res, next) => {
+  if (req.isAuthenticated()) return next();
+  return res.send({ status: false, message: 'User not logged in' });
+};
+
+module.exports = { isAdmin, isLoggedIn };

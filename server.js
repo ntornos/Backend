@@ -54,8 +54,8 @@ passport.serializeUser((user, done) => done(null, user._id));
 passport.deserializeUser((id, done) => User.findById(id, (err, user) => done(null, user)));
 
 // Routes
-app.use('/account', require('./routes/auth/local'));
-app.use('/admin', require('./routes/admin/admin'));
+app.use('/account', require('./routes/auth/localAuth.routes'));
+app.use('/admin', require('./routes/admin'));
 app.use('/api/listings', require('./routes/api/listings'));
 
 // Start Server

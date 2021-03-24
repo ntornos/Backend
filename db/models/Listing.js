@@ -18,8 +18,7 @@ const ListingSchema = new Schema({
   },
   userId: {
     type: String,
-    require: false,
-    default: '',
+    require: true,
   },
   ameneties: {
     type: Schema.Types.Mixed,

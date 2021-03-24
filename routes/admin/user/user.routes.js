@@ -1,7 +1,7 @@
-const User = require('../../db/models/User');
+const User = require('../../../db/models/User');
 const router = require('express').Router();
 
-const { isAdmin } = require('../auth/utils');
+const { isAdmin } = require('../../auth/utils');
 
 module.exports = router;
 

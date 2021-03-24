@@ -1,5 +1,7 @@
 const router = require('express').Router();
+const e = require('express');
 const Listing = require('../../db/models/Listing');
+const { isLoggedIn, isAdmin } = require('../auth/utils');
 
 module.exports = router;
 
@@ -32,8 +34,8 @@ router.get('/', (req, res) => {
 //  @desc        Create new listing
 //  @route       POST /api/listings
 //  @access      Public
-router.post('/', (req, res) => {
-  const { title, subtitle, price, address, images, userId, ameneties } = req.body;
+router.post('/', isLoggedIn, (req, res) => {
+  const { title, subtitle, price, address, images, ameneties } = req.body;
 
   const { bathroomNum, bedroomNum, area } = ameneties;
   try {
@@ -44,7 +46,7 @@ router.post('/', (req, res) => {
         price,
         address,
         images,
-        userId,
+        userId: req.user._id,
         ameneties: {
           bathroomNum,
           bedroomNum,
@@ -70,13 +72,18 @@ router.post('/', (req, res) => {
 
 //  @desc        Edit listing
 //  @route       PUT /api/listings/:id
-//  @access      Public
-router.put('/:id', async (req, res) => {
+//  @access      Private
+router.put('/:id', isLoggedIn, async (req, res) => {
   const { id } = req.params;
-  const listingUpdates = { ...req.body.data };
-  const options = { new: true, useAndModify: false };
 
   try {
+    // if the logged in userId doesn't match the userId on the current listing, it can't be edited. Unless it's an admin.
+    const currListing = await Listing.findById(id);
+
+    if (!(currListing.userId !== req.user._id)) {
+      return res.send({ status: false, message: 'No permission to edit this listing' });
+    }
+
     await Listing.updateOne({ _id: id }, { ...req.body }, (err, response) => {
       if (err) throw err;
 
@@ -94,7 +101,7 @@ router.put('/:id', async (req, res) => {
 //  @desc        Delete listing
 //  @route       DELETE /api/listings/:id
 //  @access      Public
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', isLoggedIn, async (req, res) => {
   const { id } = req.params;
   try {
     await Listing.findByIdAndDelete(id, err => {
