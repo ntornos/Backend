@@ -1,13 +1,13 @@
 const router = require('express').Router();
-const Listing = require('../../../db/models/Listing');
-const { isAdmin } = require('../../auth/utils');
+const Listing = require('../../db/models/Listing');
+const { isAdmin } = require('../auth/utils');
 
 module.exports = router;
 
 //  @desc        Create listing
-//  @route       POST /admin/listings
+//  @route       POST /admin/create-listing
 //  @access      Private
-router.post('/', isAdmin, (req, res) => {
+router.post('/create-listing', isAdmin, (req, res) => {
   const { title, subtitle, price, address, images, ameneties } = req.body;
 
   const { bathroomNum, bedroomNum, area } = ameneties;
@@ -44,9 +44,9 @@ router.post('/', isAdmin, (req, res) => {
 });
 
 //  @desc        Edit listing
-//  @route       PUT /admin/listings/:id
+//  @route       PUT /admin/update-listing/:id
 //  @access      Private
-router.put('/:id', isAdmin, async (req, res) => {
+router.put('/update-listing/:id', isAdmin, async (req, res) => {
   const { id } = req.params;
 
   try {
@@ -72,9 +72,9 @@ router.put('/:id', isAdmin, async (req, res) => {
 });
 
 //  @desc        Delete listing
-//  @route       DELETE /admin/listings/:id
+//  @route       DELETE /admin-actions/delete-listing/:id
 //  @access      Public
-router.delete('/:id', isAdmin, async (req, res) => {
+router.delete('/delete-listing/:id', isAdmin, async (req, res) => {
   const { id } = req.params;
   try {
     await Listing.findByIdAndDelete(id, err => {

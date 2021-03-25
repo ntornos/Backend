@@ -1,5 +1,4 @@
 const cors = require('cors');
-const mongoose = require('mongoose');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const express = require('express');
@@ -55,8 +54,9 @@ passport.deserializeUser((id, done) => User.findById(id, (err, user) => done(nul
 
 // Routes
 app.use('/account', require('./routes/auth/localAuth.routes'));
-app.use('/admin', require('./routes/admin/index'));
+app.use('/admin-actions', require('./routes/admin-actions/'));
 app.use('/api/listings', require('./routes/api/listings'));
+app.use('/user-actions', require('./routes/user-actions/'));
 
 // Start Server
 app.listen(process.env.PORT || PORT, () => {
