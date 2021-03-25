@@ -1,8 +1,8 @@
-const User = require('../../../db/models/User');
 const router = require('express').Router();
 const bcrypt = require('bcryptjs');
 
-const { isAdmin } = require('../../auth/utils');
+const User = require('../../db/models/User');
+const { isAdmin } = require('../auth/utils');
 
 module.exports = router;
 
