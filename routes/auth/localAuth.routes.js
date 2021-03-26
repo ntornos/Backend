@@ -23,7 +23,6 @@ router.post('/login', passport.authenticate('local'), (req, res) => {
 //  @desc        Register user
 //  @route       POST /account/reguster
 //  @access      Public
-
 router.post('/register', async (req, res, next) => {
   const { email, password, role } = req.body;
 

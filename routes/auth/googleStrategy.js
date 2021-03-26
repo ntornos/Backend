@@ -16,9 +16,11 @@ passport.use(
     // this function gets called on a succesful authentication!
     // the function below is called the verify cb.
     function (_, __, profile, cb) {
-      // insert into db.
       const email = profile.emails[0].value;
+      const profileImg = profile.photos[0].value;
+
       User.findOne({ email: email }, async (err, doc) => {
+        console.log(`doc`, doc);
         // return the error but no user is coming back
         if (err) return cb(err, null);
 
@@ -28,25 +30,32 @@ passport.use(
             googleId: profile.id,
             username: profile.name.givenName,
             email,
+            profilePicture: profileImg,
           });
           await newUser.save();
           // if it doesn't exist send the new user
-          cb(null, newUser);
+          return cb(null, newUser);
         }
 
         if (doc && !doc.googleId) {
-          User.updateOne(
-            { email: email },
+          User.findByIdAndUpdate(
+            doc._id,
             {
-              $set: {
-                googleId: profile.id,
-              },
+              googleId: profile.id,
+              username: profile.name.givenName,
+              profilePicture: profileImg,
+            },
+            { useFindAndModify: false },
+            (err, doc) => {
+              if (err) throw err;
+              console.log(`doc inside`, doc);
+              if (doc) return cb(null, doc);
             }
           );
         }
 
         // if it does exist send the found doc
-        cb(null, doc);
+        return cb(null, doc);
       });
     }
   )

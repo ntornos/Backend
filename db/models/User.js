@@ -14,12 +14,9 @@ const user = new mongoose.Schema({
     type: String,
     required: false,
   },
-  google: {
+  googleId: {
     type: String,
     required: false,
-    id: String,
-    token: String,
-    name: String,
   },
   role: {
     type: String,

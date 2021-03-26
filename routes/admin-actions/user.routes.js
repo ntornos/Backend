@@ -7,9 +7,9 @@ const { isAdmin } = require('../auth/utils');
 module.exports = router;
 
 //  @desc        Get all users
-//  @route       GET /admin/users
+//  @route       GET /admin-actions/find-all
 //  @access      Private
-router.get('/', isAdmin, async (req, res) => {
+router.get('/find-users-all', isAdmin, async (req, res) => {
   try {
     await User.find((err, users) => {
       if (err) throw err;
@@ -53,10 +53,11 @@ router.post('/', (req, res, next) => {
 });
 
 //  @desc        Delete user
-//  @route       DELETE /admin/users
+//  @route       DELETE /admin-actions/delete-user/id
 //  @access      Private
-router.delete('/', isAdmin, async (req, res) => {
-  await User.deleteOne({ _id: req.body._id }, (err, user) => {
+router.delete('/delete-user/:id', isAdmin, async (req, res) => {
+  const { id } = req.params;
+  await User.deleteOne({ _id: id }, (err, user) => {
     if (err) throw err;
     else return res.send({ status: true, message: 'user deleted', data: user });
   });
