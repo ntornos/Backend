@@ -29,6 +29,10 @@ const ListingSchema = new Schema({
     required: false,
     default: false,
   },
+  status: {
+    type: String,
+    require: true,
+  },
 });
 
 const Listing = mongoose.model('Listing', ListingSchema);
