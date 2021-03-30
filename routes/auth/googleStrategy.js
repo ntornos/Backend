@@ -20,7 +20,6 @@ passport.use(
       const profileImg = profile.photos[0].value;
 
       User.findOne({ email: email }, async (err, doc) => {
-        console.log(`doc`, doc);
         // return the error but no user is coming back
         if (err) return cb(err, null);
 
@@ -48,7 +47,7 @@ passport.use(
             { useFindAndModify: false },
             (err, doc) => {
               if (err) throw err;
-              console.log(`doc inside`, doc);
+
               if (doc) return cb(null, doc);
             }
           );
