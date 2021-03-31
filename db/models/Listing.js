@@ -31,7 +31,7 @@ const ListingSchema = new Schema({
   },
   status: {
     type: String,
-    require: true,
+    required: true,
   },
 });
 
