@@ -11,12 +11,12 @@ module.exports = router;
 router.get('/find-all', isLoggedIn, (req, res, next) => {
   try {
     Listing.find({ userId: req.user.id }, (err, listings) => {
-      if (err) throw err;
+      if (err) return next(err);
 
       return res.send({ status: true, count: listings.length, data: listings });
     });
   } catch (err) {
-    console.error(err);
+    next(err);
   }
 });
 
@@ -26,12 +26,12 @@ router.get('/find-all', isLoggedIn, (req, res, next) => {
 router.get('/find-unarchived', isLoggedIn, (req, res, next) => {
   try {
     Listing.find({ userId: req.user.id, archived: false }, (err, listings) => {
-      if (err) throw err;
+      if (err) return next(err);
 
       return res.send({ status: true, count: listings.length, data: listings });
     });
   } catch (err) {
-    console.error(err);
+    next(err);
   }
 });
 
@@ -41,20 +41,20 @@ router.get('/find-unarchived', isLoggedIn, (req, res, next) => {
 router.get('/find-archived', isLoggedIn, (req, res, next) => {
   try {
     Listing.find({ userId: req.user.id, archived: true }, (err, listings) => {
-      if (err) throw err;
+      if (err) return next(err);
 
       return res.send({ status: true, count: listings.length, data: listings });
     });
   } catch (err) {
-    console.error(err);
+    next(err);
   }
 });
 
 //  @desc        Create new listing
 //  @route       POST /user-actions/create-listing
 //  @access      Private
-router.post('/create-listing', isLoggedIn, (req, res) => {
-  const { title, subtitle, price, address, images, ameneties } = req.body;
+router.post('/create-listing', isLoggedIn, (req, res, next) => {
+  const { title, subtitle, price, address, images, ameneties, status } = req.body;
 
   const { bathroomNum, bedroomNum, area } = ameneties;
   try {
@@ -71,9 +71,10 @@ router.post('/create-listing', isLoggedIn, (req, res) => {
           bedroomNum,
           area,
         },
+        status,
       },
       async (err, listing) => {
-        if (err) throw err;
+        if (err) return next(err);
 
         await listing.save();
 
@@ -85,14 +86,14 @@ router.post('/create-listing', isLoggedIn, (req, res) => {
       }
     );
   } catch (err) {
-    console.error(err);
+    next(err);
   }
 });
 
 //  @desc        Edit listing
 //  @route       PUT /user-actions/update-listing/:id
 //  @access      Private
-router.put('/update-listing/:id', isLoggedIn, async (req, res) => {
+router.put('/update-listing/:id', isLoggedIn, async (req, res, next) => {
   const { id } = req.params;
 
   try {
@@ -104,7 +105,7 @@ router.put('/update-listing/:id', isLoggedIn, async (req, res) => {
     }
 
     await Listing.updateOne({ _id: id }, { ...req.body }, (err, response) => {
-      if (err) throw err;
+      if (err) return next(err);
 
       return res.send({
         status: true,
@@ -112,19 +113,19 @@ router.put('/update-listing/:id', isLoggedIn, async (req, res) => {
         response,
       });
     });
-  } catch (e) {
-    console.error(e);
+  } catch (err) {
+    next(err);
   }
 });
 
 //  @desc        Delete listing
 //  @route       DELETE /user-actions/delete-listing/:id
 //  @access      Public
-router.delete('/delete-listing/:id', isLoggedIn, async (req, res) => {
+router.delete('/delete-listing/:id', isLoggedIn, async (req, res, next) => {
   const { id } = req.params;
   try {
     await Listing.findByIdAndDelete(id, err => {
-      if (err) throw error;
+      if (err) return next(err);
 
       res.send({
         status: true,
@@ -132,6 +133,6 @@ router.delete('/delete-listing/:id', isLoggedIn, async (req, res) => {
       });
     });
   } catch (err) {
-    console.error(err);
+    next(err);
   }
 });

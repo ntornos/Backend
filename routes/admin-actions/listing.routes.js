@@ -7,7 +7,7 @@ module.exports = router;
 //  @desc        Create listing
 //  @route       POST /admin/create-listing
 //  @access      Private
-router.post('/create-listing', isAdmin, (req, res) => {
+router.post('/create-listing', isAdmin, (req, res, next) => {
   const { title, subtitle, price, address, images, ameneties } = req.body;
 
   const { bathroomNum, bedroomNum, area } = ameneties;
@@ -27,7 +27,7 @@ router.post('/create-listing', isAdmin, (req, res) => {
         },
       },
       async (err, listing) => {
-        if (err) throw err;
+        if (err) return next(err);
 
         await listing.save();
 
@@ -39,14 +39,14 @@ router.post('/create-listing', isAdmin, (req, res) => {
       }
     );
   } catch (err) {
-    console.error(err);
+    next(err);
   }
 });
 
 //  @desc        Edit listing
 //  @route       PUT /admin/update-listing/:id
 //  @access      Private
-router.put('/update-listing/:id', isAdmin, async (req, res) => {
+router.put('/update-listing/:id', isAdmin, async (req, res, next) => {
   const { id } = req.params;
 
   try {
@@ -58,7 +58,7 @@ router.put('/update-listing/:id', isAdmin, async (req, res) => {
     }
 
     await Listing.updateOne({ _id: id }, { ...req.body }, (err, response) => {
-      if (err) throw err;
+      if (err) return next(err);
 
       return res.send({
         status: true,
@@ -67,18 +67,18 @@ router.put('/update-listing/:id', isAdmin, async (req, res) => {
       });
     });
   } catch (e) {
-    console.error(e);
+    next(e);
   }
 });
 
 //  @desc        Delete listing
 //  @route       DELETE /admin-actions/delete-listing/:id
 //  @access      Public
-router.delete('/delete-listing/:id', isAdmin, async (req, res) => {
+router.delete('/delete-listing/:id', isAdmin, async (req, res, next) => {
   const { id } = req.params;
   try {
     await Listing.findByIdAndDelete(id, err => {
-      if (err) throw error;
+      if (err) return next(err);
 
       res.send({
         status: true,
@@ -86,6 +86,6 @@ router.delete('/delete-listing/:id', isAdmin, async (req, res) => {
       });
     });
   } catch (err) {
-    console.error(err);
+    next(err);
   }
 });

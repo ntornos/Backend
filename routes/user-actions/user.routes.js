@@ -12,13 +12,13 @@ module.exports = router;
 router.delete('/delete-account', isLoggedIn, (req, res, next) => {
   try {
     User.findByIdAndDelete(req.user.id, async (err, account) => {
-      if (err) throw err;
+      if (err) return next(err);
 
       await Listing.deleteMany({ userId: req.user.id });
 
       return res.send({ status: true, message: 'user account deleted', data: account });
     });
   } catch (err) {
-    console.error(err);
+    next(err);
   }
 });

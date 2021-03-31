@@ -53,10 +53,17 @@ passport.serializeUser((user, done) => done(null, user._id));
 passport.deserializeUser((id, done) => User.findById(id, (err, user) => done(null, user)));
 
 // Routes
-app.use('/account', require('./routes/auth/localAuth.routes'));
+app.use('/account', require('./routes/auth/'));
 app.use('/admin-actions', require('./routes/admin-actions/'));
 app.use('/api/listings', require('./routes/api/listings'));
 app.use('/user-actions', require('./routes/user-actions/'));
+
+app.use((err, req, res, next) => {
+  console.log('500 in server.js');
+  console.error(err);
+  console.error(err.stack);
+  res.status(err.status || 500).send(err.message || 'Internal server error');
+});
 
 // Start Server
 app.listen(process.env.PORT || PORT, () => {
