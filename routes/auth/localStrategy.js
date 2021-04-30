@@ -11,12 +11,11 @@ module.exports = () => {
       User.findOne({ email: email }, (err, user) => {
         if (err) throw err;
 
-        if (!user) return done(null, false);
+        if (!user) return done('User does not exist ', false);
 
         bcrypt.compare(password, user.password, (err, loggedIn) => {
           if (err) throw err;
-
-          return loggedIn ? done(null, user) : done(null, false);
+          return loggedIn ? done(null, user) : done('Incorrect Password', false);
         });
       });
     })

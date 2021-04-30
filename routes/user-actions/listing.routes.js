@@ -54,24 +54,15 @@ router.get('/find-archived', isLoggedIn, (req, res, next) => {
 //  @route       POST /user-actions/create-listing
 //  @access      Private
 router.post('/create-listing', isLoggedIn, (req, res, next) => {
-  const { title, subtitle, price, address, images, ameneties, status } = req.body;
+  const { listingStatus, address, listingType } = req.body;
 
-  const { bathroomNum, bedroomNum, area } = ameneties;
   try {
     Listing.create(
       {
-        title,
-        subtitle,
-        price,
+        status: listingStatus,
         address,
-        images,
-        userId: req.user._id,
-        ameneties: {
-          bathroomNum,
-          bedroomNum,
-          area,
-        },
-        status,
+        type: listingType,
+        userId: req.user.id,
       },
       async (err, listing) => {
         if (err) return next(err);

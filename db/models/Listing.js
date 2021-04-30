@@ -3,9 +3,16 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const ListingSchema = new Schema({
-  title: String,
-  subTitle: String,
-  price: Number,
+  title: {
+    type: String,
+    required: false,
+  },
+  // subTitle: String,
+  price: {
+    type: Number,
+    required: false,
+    default: 0,
+  },
   address: {
     type: String,
     required: false,
@@ -18,11 +25,12 @@ const ListingSchema = new Schema({
   },
   userId: {
     type: String,
-    require: true,
+    required: true,
   },
   ameneties: {
     type: Schema.Types.Mixed,
     required: true,
+    default: {},
   },
   archived: {
     type: Boolean,
@@ -30,6 +38,10 @@ const ListingSchema = new Schema({
     default: false,
   },
   status: {
+    type: String,
+    required: true,
+  },
+  type: {
     type: String,
     required: true,
   },

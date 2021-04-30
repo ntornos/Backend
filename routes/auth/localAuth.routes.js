@@ -24,6 +24,7 @@ router.post('/login', passport.authenticate('local'), (req, res) => {
   try {
     res.json({ status: true });
   } catch (err) {
+    // console.log(err, 'err');
     next(err);
   }
 });
@@ -50,10 +51,10 @@ router.post('/register', async (req, res, next) => {
           role,
         });
         await newUser.save();
-        return res.send({ status: true, message: 'User created', data: newUser });
+        return res.send({ status: true });
       }
 
-      if (user) return res.send({ status: false, message: 'User already exists' });
+      if (user) return res.send({ status: false });
     });
   } catch (err) {
     next(err);
