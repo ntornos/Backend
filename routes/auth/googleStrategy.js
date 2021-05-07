@@ -65,7 +65,7 @@ router.get('/auth/google', passport.authenticate('google', { scope: ['email', 'p
 router.get(
   process.env.GOOGLE_CALLBACK_URL,
   passport.authenticate('google', {
-    successRedirect: `${process.env.REACT_APP_CLIENT_URL}/account`,
+    successRedirect: `${process.env.REACT_APP_CLIENT_URL}/`,
     failureRedirect: `${process.env.REACT_APP_CLIENT_URL}/login`,
   })
 );

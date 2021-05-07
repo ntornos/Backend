@@ -2,6 +2,7 @@ const router = require('express').Router();
 const passport = require('passport');
 const User = require('../../db/models/User');
 const bcrypt = require('bcryptjs');
+const ErrorResponse = require('../../utils/errorResponse');
 
 module.exports = router;
 
@@ -10,23 +11,16 @@ module.exports = router;
 //  @access      Public
 router.get('/me', (req, res, next) => {
   try {
-    if (req.user) return res.send({ status: true, data: req.user });
-    else res.send({ status: false, message: 'No user logged in' });
+    return res.send({ data: req.user });
+    // else return next(new ErrorResponse('No', 404));
+    // return;
   } catch (err) {
-    next(err);
+    next(new ErrorResponse('Error catched at /me user route', 404));
   }
 });
 
-//  @desc        Login user
-//  @route       POST /account/login
-//  @access      Public
 router.post('/login', passport.authenticate('local'), (req, res) => {
-  try {
-    res.json({ status: true });
-  } catch (err) {
-    // console.log(err, 'err');
-    next(err);
-  }
+  res.json({ status: true });
 });
 
 //  @desc        Register user
@@ -37,12 +31,11 @@ router.post('/register', async (req, res, next) => {
     const { email, password, role } = req.body;
 
     if (!email || !password || typeof email !== 'string' || typeof password !== 'string') {
-      res.send({ status: false, message: 'Improper values' });
-      return;
+      return next(new ErrorResponse('Improper values at register', 404));
     }
 
     User.findOne({ email: email }, async (err, user) => {
-      if (err) throw err;
+      if (err) return next(new ErrorResponse('Error while fetching user in database.', 500), false);
 
       if (!user) {
         const newUser = new User({
@@ -54,10 +47,11 @@ router.post('/register', async (req, res, next) => {
         return res.send({ status: true });
       }
 
-      if (user) return res.send({ status: false });
+      if (user)
+        return next(new ErrorResponse('An user with this email already exists.', 500), false);
     });
   } catch (err) {
-    next(err);
+    next(new ErrorResponse('Error catched on /register', 500));
   }
 });
 
@@ -70,8 +64,8 @@ router.get('/logout', (req, res) => {
       req.logout();
       req.session.destroy();
       return res.send({ status: true, message: 'User logged out' });
-    } else return res.send({ status: false, messsage: 'No user logged in' });
+    } else return new ErrorResponse('No user to sign out', 404);
   } catch (err) {
-    next(err);
+    next(new ErrorResponse('Error catrched on /logout', 500));
   }
 });

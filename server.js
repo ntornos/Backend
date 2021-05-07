@@ -4,6 +4,7 @@ const cookieParser = require('cookie-parser');
 const express = require('express');
 const passport = require('passport');
 const morgan = require('morgan');
+const errorHandler = require('./middleware/error');
 
 const app = express();
 const PORT = 4000;
@@ -62,14 +63,16 @@ app.use('/admin-actions', require('./routes/admin-actions/'));
 app.use('/api/listings', require('./routes/api/listings'));
 app.use('/user-actions', require('./routes/user-actions/'));
 
-app.use((err, req, res, next) => {
-  console.log('500 in server.js');
-  console.error(err);
-  res.status(401).json({ message: err.message });
-  // res.status(500).json({success: false, error 'Sorry, error'});
+app.use(errorHandler);
 
-  // return res.status(err.status || 500).send(err.message || 'Internal server error');
-});
+// app.use((err, req, res, next) => {
+//   console.log('500 in server.js');
+//   console.error(err);
+//   res.status(401).json({ message: err.message });
+//   // res.status(500).json({success: false, error 'Sorry, error'});
+
+//   // return res.status(err.status || 500).send(err.message || 'Internal server error');
+// });
 
 // Start Server
 app.listen(process.env.PORT || PORT, () => {
