@@ -104,7 +104,7 @@ router.put('/update-listing/:id', isLoggedIn, async (req, res, next) => {
       return next(new ErrorResponse('No permission to edit this listing', 401));
     }
 
-    await Listing.findByIdAndUpdate({ _id: id }, { ...req.body }, (err, doc) => {
+    await Listing.findByIdAndUpdate({ _id: id }, { ...req.body }, { new: true }, (err, doc) => {
       if (err) return next(new ErrorResponse(err, 500));
 
       return res.send({ status: true, message: 'Updated Listing Successfully', doc });
