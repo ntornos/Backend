@@ -12,8 +12,6 @@ module.exports = router;
 router.get('/me', (req, res, next) => {
   try {
     return res.send({ data: req.user });
-    // else return next(new ErrorResponse('No', 404));
-    // return;
   } catch (err) {
     next(new ErrorResponse('Error catched at /me user route', 404));
   }
@@ -29,6 +27,7 @@ router.post('/login', passport.authenticate('local'), (req, res) => {
 router.post('/register', async (req, res, next) => {
   try {
     const { email, password, role } = req.body;
+    console.log(req.body);
 
     if (!email || !password || typeof email !== 'string' || typeof password !== 'string') {
       return next(new ErrorResponse('Improper values at register', 404));

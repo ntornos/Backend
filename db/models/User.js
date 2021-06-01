@@ -26,8 +26,7 @@ const user = new mongoose.Schema({
   profilePicture: {
     type: String,
     required: false,
-    default:
-      'https://freepikpsd.com/wp-content/uploads/2019/10/default-user-profile-image-png-2-Transparent-Images-1.png',
+    // default: '',
   },
 });
 

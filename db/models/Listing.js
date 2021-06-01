@@ -8,10 +8,13 @@ const ListingSchema = new Schema({
     required: false,
   },
   // subTitle: String,
-  price: {
-    type: Number,
+  rentPrice: {
+    type: String,
     required: false,
-    default: 0,
+  },
+  salePrice: {
+    type: String,
+    required: false,
   },
   address: {
     type: String,
@@ -26,6 +29,14 @@ const ListingSchema = new Schema({
   userId: {
     type: String,
     required: true,
+  },
+  bedrooms: {
+    type: String,
+    required: false,
+  },
+  bathrooms: {
+    type: String,
+    required: false,
   },
   ameneties: {
     type: Schema.Types.Mixed,
@@ -44,6 +55,22 @@ const ListingSchema = new Schema({
   type: {
     type: String,
     required: true,
+  },
+  squareFoot: {
+    type: String,
+    required: false,
+  },
+  depositAmount: {
+    type: String,
+    required: false,
+  },
+  leaseLength: {
+    type: String,
+    required: false,
+  },
+  mapImg: {
+    type: String,
+    required: false,
   },
 });
 

@@ -2,6 +2,7 @@ const router = require('express').Router();
 
 const Listing = require('../../db/models/Listing');
 const { isLoggedIn } = require('../auth/utils');
+const ErrorResponse = require('../../utils/errorResponse');
 
 module.exports = router;
 
@@ -54,7 +55,8 @@ router.get('/find-archived', isLoggedIn, (req, res, next) => {
 //  @route       POST /user-actions/create-listing
 //  @access      Private
 router.post('/create-listing', isLoggedIn, (req, res, next) => {
-  const { listingStatus, address, listingType } = req.body;
+  const { listingStatus, address, listingType, mapImg } = req.body;
+  console.log(mapImg);
 
   try {
     Listing.create(
@@ -63,6 +65,7 @@ router.post('/create-listing', isLoggedIn, (req, res, next) => {
         address,
         type: listingType,
         userId: req.user.id,
+        mapImg,
       },
       async (err, listing) => {
         if (err) return next(err);
@@ -86,26 +89,28 @@ router.post('/create-listing', isLoggedIn, (req, res, next) => {
 //  @access      Private
 router.put('/update-listing/:id', isLoggedIn, async (req, res, next) => {
   const { id } = req.params;
+  const { bathrooms, bedrooms } = req.body;
+
+  const amenities = {
+    bathrooms,
+    bedrooms,
+  };
 
   try {
     // if the logged in userId doesn't match the userId on the current listing, it can't be edited. Unless it's an admin.
     const currListing = await Listing.findById(id);
 
     if (!(currListing.userId !== req.user._id)) {
-      return res.send({ status: false, message: 'No permission to edit this listing' });
+      return next(new ErrorResponse('No permission to edit this listing', 401));
     }
 
-    await Listing.updateOne({ _id: id }, { ...req.body }, (err, response) => {
-      if (err) return next(err);
+    await Listing.findByIdAndUpdate({ _id: id }, { ...req.body }, (err, doc) => {
+      if (err) return next(new ErrorResponse(err, 500));
 
-      return res.send({
-        status: true,
-        message: 'Updated Listing Successfully',
-        response,
-      });
+      return res.send({ status: true, message: 'Updated Listing Successfully', doc });
     });
   } catch (err) {
-    next(err);
+    next(new ErrorResponse(err, 500));
   }
 });
 
