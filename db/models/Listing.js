@@ -46,7 +46,7 @@ const ListingSchema = new Schema({
   archived: {
     type: Boolean,
     required: false,
-    default: false,
+    default: true,
   },
   status: {
     type: String,

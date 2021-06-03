@@ -59,20 +59,12 @@ passport.deserializeUser((id, done) => User.findById(id, (err, user) => done(nul
 
 // Routes
 app.use('/account', require('./routes/auth/'));
-app.use('/admin-actions', require('./routes/admin-actions/'));
 app.use('/api/listings', require('./routes/api/listings'));
+app.use('/admin-actions', require('./routes/admin-actions/'));
 app.use('/user-actions', require('./routes/user-actions/'));
+app.use('/public-actions', require('./routes/public-actions/'));
 
 app.use(errorHandler);
-
-// app.use((err, req, res, next) => {
-//   console.log('500 in server.js');
-//   console.error(err);
-//   res.status(401).json({ message: err.message });
-//   // res.status(500).json({success: false, error 'Sorry, error'});
-
-//   // return res.status(err.status || 500).send(err.message || 'Internal server error');
-// });
 
 // Start Server
 app.listen(process.env.PORT || PORT, () => {
