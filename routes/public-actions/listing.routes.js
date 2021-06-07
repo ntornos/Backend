@@ -6,21 +6,28 @@ const ErrorResponse = require('../../utils/errorResponse');
 module.exports = router;
 
 //  @desc        Search Listing by sector
-//  @route       PUT /public-actions/search-listings/:sectorName
+//  @route       GET /public-actions/search-listings/:sectorName
 //  @access      Public
 router.get('/search-listings/:sectorName', async (req, res, next) => {
-  const { sectorName } = req.params;
+  // console.log('ROUTEEEEE');
+  // const { sectorName } = req.params;
+  // console.log(req.params);
+  // let decodedURI = decodeURIComponent(req.params.sectorName);
 
-  console.log(123);
+  // console.log(decodedURI, 123);
+
   try {
-    await Listing.find({ address: sectorName }, (err, docs) => {
-      if (err) return next(new ErrorResponse(err, 500));
+    await Listing.find(
+      { address: 'Bella Vista, Santo Domingo, Dominican Republic' },
+      (err, docs) => {
+        if (err) return next(new ErrorResponse(err, 500));
 
-      if (docs.length)
-        return res.send({ status: true, message: `All listings for ${sectorName}`, data: docs });
+        if (docs.length)
+          return res.send({ status: true, message: `All listings for ${sectorName}`, data: docs });
 
-      return res.send({ status: true, message: `No listings for ${sectorName}` });
-    });
+        return res.send({ status: true, message: `No listings for ${sectorName}` });
+      }
+    );
   } catch (err) {
     next(new ErrorResponse(err, 500));
   }
